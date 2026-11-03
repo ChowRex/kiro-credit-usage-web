@@ -1,0 +1,12 @@
+# Install this line into the dedicated service account's crontab only after review.
+# Replace every __PLACEHOLDER__ with an absolute host path.
+# The Compose environment file and the parent directory of __LOG_FILE__ must be readable/writable
+# by the same service account that owns the crontab. Create the log directory before installation.
+# CRON_TZ is supported by common Linux cron implementations; otherwise set the host timezone to Asia/Shanghai.
+
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+CRON_TZ=Asia/Shanghai
+
+# Daily full refresh at Beijing 10:00. The refresh container exits after completion.
+0 10 * * * cd "__PROJECT_DIR__" && /usr/bin/docker compose --env-file "__ENV_FILE__" -f docker/compose.yaml run --rm --no-build refresh >> "__LOG_FILE__" 2>&1

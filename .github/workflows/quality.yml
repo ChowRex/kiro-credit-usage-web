@@ -43,6 +43,9 @@ jobs:
       - name: Verify locked frontend dependencies
         run: npm ci
 
+      - name: Validate container configuration
+        run: docker compose --env-file docker/container.env.example -f docker/compose.yaml config --quiet
+
       - name: Check Python quality
         run: |
           .venv/bin/black --check app scripts tests

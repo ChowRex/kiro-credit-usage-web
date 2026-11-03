@@ -137,32 +137,32 @@ The token must contain at least 16 characters. It is never included in API respo
 
 `config.example.toml` is an intentionally safe template. Its server host defaults to `127.0.0.1`; setting `0.0.0.0` is an explicit deployment decision.
 
-| Section | Key | Meaning |
-|---|---|---|
-| `server` | `host` | Bind host. Keep `127.0.0.1` for local preview. |
-| `server` | `port` | TCP port, default `8080`. |
-| `server` | `web_dir` | Static asset directory, default `web`. |
-| `server` | `stale_after_hours` | Snapshot age that marks data stale. |
-| `server` | `manual_refresh_cooldown_seconds` | Cooldown between accepted manual refreshes. |
-| `server` | `request_timeout_seconds` | Per-connection HTTP socket timeout. |
-| `server` | `max_connections` | Maximum simultaneous HTTP connections. |
-| `storage` | `data_dir` | Local persistent snapshot directory. |
-| `aws` | `profile` | Optional AWS CLI profile. |
-| `aws` | `region` | AWS region passed to AWS CLI. |
-| `aws` | `account_id` | Required 12-digit expected AWS account ID. |
-| `aws` | `data_bucket` | Bucket containing optional roster and identity mapping objects. |
-| `aws` | `database` | Athena database identifier. |
-| `aws` | `workgroup` | Athena WorkGroup with a scan cutoff. |
-| `aws` | `identity_store_id` | IAM Identity Center identity store ID. |
-| `aws` | `application_arn` | Required when no authoritative subscription CSV is configured. |
-| `aws` | `subscription_csv_key` | Optional authoritative active-subscription roster object key. |
-| `aws` | `identity_mapping_key` | Optional display-name/email mapping object key. |
-| `aws` | `max_query_scan_bytes` | Local maximum scanned bytes per Athena query. |
-| `aws` | `max_s3_object_bytes` | Maximum roster or mapping object size. |
-| `aws` | `max_athena_rows` | Maximum Athena result rows per query. |
-| `refresh` | `daily_time` | Intended daily local time in `HH:MM`; use `10:00` on an `Asia/Shanghai` host. |
-| `refresh` | `retry_delays_seconds` | Retry delays after a failed refresh. |
-| `refresh` | `jitter_ratio` | Retry jitter from `0` through `1`. |
+| Section   | Key                               | Meaning                                                                       |
+| --------- | --------------------------------- | ----------------------------------------------------------------------------- |
+| `server`  | `host`                            | Bind host. Keep `127.0.0.1` for local preview.                                |
+| `server`  | `port`                            | TCP port, default `8080`.                                                     |
+| `server`  | `web_dir`                         | Static asset directory, default `web`.                                        |
+| `server`  | `stale_after_hours`               | Snapshot age that marks data stale.                                           |
+| `server`  | `manual_refresh_cooldown_seconds` | Cooldown between accepted manual refreshes.                                   |
+| `server`  | `request_timeout_seconds`         | Per-connection HTTP socket timeout.                                           |
+| `server`  | `max_connections`                 | Maximum simultaneous HTTP connections.                                        |
+| `storage` | `data_dir`                        | Local persistent snapshot directory.                                          |
+| `aws`     | `profile`                         | Optional AWS CLI profile.                                                     |
+| `aws`     | `region`                          | AWS region passed to AWS CLI.                                                 |
+| `aws`     | `account_id`                      | Required 12-digit expected AWS account ID.                                    |
+| `aws`     | `data_bucket`                     | Bucket containing optional roster and identity mapping objects.               |
+| `aws`     | `database`                        | Athena database identifier.                                                   |
+| `aws`     | `workgroup`                       | Athena WorkGroup with a scan cutoff.                                          |
+| `aws`     | `identity_store_id`               | IAM Identity Center identity store ID.                                        |
+| `aws`     | `application_arn`                 | Required when no authoritative subscription CSV is configured.                |
+| `aws`     | `subscription_csv_key`            | Optional authoritative active-subscription roster object key.                 |
+| `aws`     | `identity_mapping_key`            | Optional display-name/email mapping object key.                               |
+| `aws`     | `max_query_scan_bytes`            | Local maximum scanned bytes per Athena query.                                 |
+| `aws`     | `max_s3_object_bytes`             | Maximum roster or mapping object size.                                        |
+| `aws`     | `max_athena_rows`                 | Maximum Athena result rows per query.                                         |
+| `refresh` | `daily_time`                      | Intended daily local time in `HH:MM`; use `10:00` on an `Asia/Shanghai` host. |
+| `refresh` | `retry_delays_seconds`            | Retry delays after a failed refresh.                                          |
+| `refresh` | `jitter_ratio`                    | Retry jitter from `0` through `1`.                                            |
 
 The loader rejects implicit type coercion, invalid account IDs, invalid Athena identifiers, malformed time values, non-positive limits, and missing roster sources.
 
@@ -174,13 +174,13 @@ This project is intentionally specific about its input contract. Validate these 
 
 The collector queries `"<database>"."user_report"`. The table must provide these columns:
 
-| Column | Required shape | Use |
-|---|---|---|
-| `date` | `YYYY-MM-DD` text accepted by Athena `date_parse` | Shanghai-month cutoff and activity dates. |
-| `userid` | non-empty user identifier; a `directory-id.user-id` form is supported | Account key. |
-| `credits_used` | decimal-compatible value | Monthly Credits. |
-| `overage_credits_used` | decimal-compatible value | Overage Credits. |
-| `subscription_tier` | tier label | Latest observed tier fallback. |
+| Column                 | Required shape                                                        | Use                                       |
+| ---------------------- | --------------------------------------------------------------------- | ----------------------------------------- |
+| `date`                 | `YYYY-MM-DD` text accepted by Athena `date_parse`                     | Shanghai-month cutoff and activity dates. |
+| `userid`               | non-empty user identifier; a `directory-id.user-id` form is supported | Account key.                              |
+| `credits_used`         | decimal-compatible value                                              | Monthly Credits.                          |
+| `overage_credits_used` | decimal-compatible value                                              | Overage Credits.                          |
+| `subscription_tier`    | tier label                                                            | Latest observed tier fallback.            |
 
 The collector first queries the current Shanghai calendar month's `MAX(date)`. It then constrains monthly usage and tier fallback to that cutoff date plus one exclusive day. A missing cutoff produces `data_cutoff = null`; roster entries remain visible and zero values are explicitly not evidence of non-use.
 
@@ -190,15 +190,15 @@ The collector first queries the current Shanghai calendar month's `MAX(date)`. I
 
 Supported header aliases are:
 
-| Canonical field | Accepted headers |
-|---|---|
-| user ID | `userid`, `user_id` |
-| name | `user_name`, `username`, `name` |
-| email | `email` |
-| subscription state | `subscription_status`, `status` |
-| tier | `subscription_tier`, `kiro_plan`, `plan` |
-| activation date | `activation_date` |
-| source | `plan_source`, `source` |
+| Canonical field    | Accepted headers                         |
+| ------------------ | ---------------------------------------- |
+| user ID            | `userid`, `user_id`                      |
+| name               | `user_name`, `username`, `name`          |
+| email              | `email`                                  |
+| subscription state | `subscription_status`, `status`          |
+| tier               | `subscription_tier`, `kiro_plan`, `plan` |
+| activation date    | `activation_date`                        |
+| source             | `plan_source`, `source`                  |
 
 Accepted active states are `ACTIVE`, `ENABLED`, `SUBSCRIBED`, and `PENDING`. Explicit inactive states include `CANCELLED`, `CANCELED`, `INACTIVE`, `DELETED`, `DISABLED`, `EXPIRED`, `SUSPENDED`, `UNASSIGNED`, `UNSUBSCRIBED`, and `REVOKED`. A missing state defaults to `ACTIVE`; an unknown supplied state stops the refresh instead of guessing.
 
@@ -273,14 +273,14 @@ If `current.json` is invalid, the server uses the last validated in-memory snaps
 
 ### Web API
 
-| Method | Endpoint | Response |
-|---|---|---|
-| `GET` | `/api/current` | Latest valid snapshot, or `503` if none exists. |
-| `GET` | `/api/health` | Health, staleness, retry, and manual-refresh availability data. |
-| `GET` | `/api/history` | Newest-first historical metadata only, without historical user rows. |
-| `GET` | `/api/export.csv` | UTF-8 BOM CSV generated from the current valid snapshot. |
-| `POST` | `/api/reload` | Reload the valid local snapshot; never calls AWS. |
-| `POST` | `/api/refresh` | Start background collection after `X-Refresh-Token` verification. |
+| Method | Endpoint          | Response                                                             |
+| ------ | ----------------- | -------------------------------------------------------------------- |
+| `GET`  | `/api/current`    | Latest valid snapshot, or `503` if none exists.                      |
+| `GET`  | `/api/health`     | Health, staleness, retry, and manual-refresh availability data.      |
+| `GET`  | `/api/history`    | Newest-first historical metadata only, without historical user rows. |
+| `GET`  | `/api/export.csv` | UTF-8 BOM CSV generated from the current valid snapshot.             |
+| `POST` | `/api/reload`     | Reload the valid local snapshot; never calls AWS.                    |
+| `POST` | `/api/refresh`    | Start background collection after `X-Refresh-Token` verification.    |
 
 `POST` endpoints intentionally reject request bodies and transfer encodings. Responses include `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer`, `X-Frame-Options: DENY`, and a restrictive same-origin Content Security Policy.
 
@@ -391,9 +391,103 @@ python3 -m app.server
 python3 -m app.refresh --retry
 ```
 
-A Linux deployment can use a timezone-aware systemd timer such as `OnCalendar=*-*-* 10:00:00 Asia/Shanghai`. A future container deployment can run the web server and refresh worker as separate processes with `data/` mounted as a persistent volume. The frontend depends on `/api/*` and schema-v1 snapshots, so the server implementation can later change without rebuilding the page shell.
+### Container deployment with Docker Compose
 
-Future work is deliberately out of scope for this repository version: public hosting, automatic firewall changes, Docker image publication, Cognito setup, public-read deployment, and automatic scheduler installation.
+The `docker/` directory contains a portable Linux `docker/Dockerfile`, `docker/compose.yaml`, `docker/container.env.example`, and `docker/kiro-credit-usage.crontab.template`. Root `.dockerignore` remains with the repository-root build context so it excludes private configuration, credentials, snapshots, and development-only files. The image requires Docker BuildKit, which supplies `TARGETARCH`; it fails rather than guessing an architecture when that value is absent. Both the Python base image manifest and AWS CLI v2 archives are pinned by SHA-256. The image verifies the matching archive digest before installing it. Debian package downloads use the configurable Tsinghua TUNA mirror by default for China mainland connectivity; overseas deployments can override both Debian mirror variables with official `deb.debian.org` URLs. Debian repository Release signatures remain verified by APT. See the [AWS CLI v2 Linux installation documentation](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html).
+
+Pushing an exact Git release tag such as `v0.1.1` runs the `Publish Docker image` GitHub Actions workflow. It builds and publishes one Docker Hub manifest for both `linux/amd64` and `linux/arm64` as `chowrex/kiro-credit-usage-web:0.1.1` and `chowrex/kiro-credit-usage-web:latest`. The workflow requires repository secrets named `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN`. It does not publish untagged or branch builds.
+
+Compose keeps two roles separate:
+
+```text
+web      Long-running dashboard, published directly on 0.0.0.0:8080.
+refresh  One-shot refresh process, started manually or by host crontab.
+```
+
+Both services share the same writable host `data/` bind mount. The existing refresh lock prevents concurrent writers. Configuration and the host AWS profile directory are mounted read-only. The `web` service alone receives the administrator token file. Containers run as the numeric host service user, drop Linux capabilities, disallow privilege escalation, use a read-only root filesystem, and receive a writable temporary filesystem only at `/tmp`.
+
+Bind mounts intentionally keep snapshots, configuration, and AWS profile material on the Docker daemon host rather than in the image. Web container logs remain managed by the Docker logging driver; the cron template writes its explicit refresh log to the host path you configure. Docker notes that bind mounts are tied to the host filesystem; mount only explicit paths and use read-only mounts where writes are not needed. See the [Docker bind-mount documentation](https://docs.docker.com/engine/storage/bind-mounts/).
+
+#### Server preparation
+
+Do not copy real files into the repository. On the server, create a protected deployment directory and a Compose environment file outside the checked-out source tree:
+
+```bash
+cp docker/container.env.example /etc/kiro-credit-usage/container.env
+chmod 600 /etc/kiro-credit-usage/container.env
+```
+
+Set only absolute daemon-host paths in that environment file:
+
+```dotenv
+KIRO_UID=1000
+KIRO_GID=1000
+KIRO_CONFIG_FILE=/srv/kiro-credit-usage/config.local.toml
+KIRO_DATA_DIR=/srv/kiro-credit-usage/data
+KIRO_AWS_DIR=/srv/kiro-credit-usage/aws-profile
+KIRO_ADMIN_TOKEN_FILE=/srv/kiro-credit-usage/.admin-token
+KIRO_HTTP_PORT=8080
+KIRO_IMAGE_TAG=0.1.1
+DEBIAN_MIRROR=https://mirrors.tuna.tsinghua.edu.cn/debian
+DEBIAN_SECURITY_MIRROR=https://mirrors.tuna.tsinghua.edu.cn/debian-security
+```
+
+`KIRO_UID` and `KIRO_GID` must match the owner of the config, data directory, AWS profile directory, and token file. The token file must be mode `0600` or stricter. This Compose file is designed for a standard rootful Docker daemon with matching numeric UID mapping. Verify ownership separately before using rootless Docker or userns-remap. This preserves the application's owner-only token check while allowing the container to write only the mounted data directory.
+
+Mount a standard AWS profile directory at `KIRO_AWS_DIR`; the profile name and region remain in the private `config.local.toml`. Keep `storage.data_dir = "data"` or set it explicitly to `/app/data`, because an unrelated host absolute path resolves inside the container's read-only root filesystem. No AWS account, partition, endpoint, region, profile name, ARN, or Identity Center identifier is baked into the image. AWS CLI selects the appropriate international or China partition from the configured profile and region. An SSO profile can be read from this mount, but unattended cron refreshes will fail after the cached SSO session expires. Profiles whose credential helpers require a writable local cache may fail for the same reason. For unattended operation, use a renewable credential mechanism approved for the server.
+
+Validate Compose interpolation before starting containers:
+
+```bash
+/usr/bin/docker compose \
+  --env-file /etc/kiro-credit-usage/container.env \
+  -f docker/compose.yaml config
+```
+
+For a local source build after review, set `KIRO_IMAGE_TAG=local` and start only the web service:
+
+```bash
+/usr/bin/docker compose \
+  --env-file /etc/kiro-credit-usage/container.env \
+  -f docker/compose.yaml up --build --detach web
+```
+
+For a server or any host testing the published multi-architecture image, retain a released `KIRO_IMAGE_TAG` such as `0.1.1`, then pull it and start without building:
+
+```bash
+/usr/bin/docker compose \
+  --env-file /etc/kiro-credit-usage/container.env \
+  -f docker/compose.yaml pull web
+/usr/bin/docker compose \
+  --env-file /etc/kiro-credit-usage/container.env \
+  -f docker/compose.yaml up --no-build --detach web
+```
+
+The direct host-port binding follows the initial intranet deployment decision. It remains anonymous HTTP read access and must never be exposed to the public internet. Add TLS, network restrictions, and individual authentication before any broader deployment.
+
+Run one controlled refresh container when needed from the already pulled or locally built image:
+
+```bash
+/usr/bin/docker compose \
+  --env-file /etc/kiro-credit-usage/container.env \
+  -f docker/compose.yaml run --rm --no-build refresh
+```
+
+This command can issue Athena queries and update the host data directory. It does not receive the administrator refresh token file.
+
+#### Host crontab template
+
+Cron is a host scheduler, not a third container. The provided template starts an ephemeral `refresh` container at Beijing 10:00 and removes it after completion:
+
+```text
+docker/kiro-credit-usage.crontab.template
+```
+
+After replacing its absolute path placeholders and reviewing it, an operator may install the line in the dedicated service account's crontab. The Compose environment file must be readable by that same account, and the parent directory of the configured cron log path must already exist and be writable before installation. The template uses `CRON_TZ=Asia/Shanghai`, an explicit Docker path, an explicit Compose environment file, and an explicit log path. The project never installs or edits crontab automatically.
+
+Cron does not automatically catch up after host downtime. If missed-run recovery, journal integration, or stricter service isolation becomes important, replace the host cron line with a timezone-aware systemd timer such as `OnCalendar=*-*-* 10:00:00 Asia/Shanghai` and `Persistent=true`.
+
+The frontend depends on `/api/*` and schema-v1 snapshots, so the server implementation can later change without rebuilding the page shell. Future work remains out of scope: public hosting, automatic firewall changes, Cognito setup, public-read deployment, and automatic scheduler installation.
 
 ### License and names
 
@@ -534,32 +628,32 @@ Token 至少 16 个字符。它不会出现在 API 响应、日志、快照、CS
 
 `config.example.toml` 是安全默认的示例。其服务监听地址为 `127.0.0.1`；改为 `0.0.0.0` 必须是部署者明确作出的内网暴露决定。
 
-| 区段 | 键 | 含义 |
-|---|---|---|
-| `server` | `host` | 监听地址。本机预览应保持 `127.0.0.1`。 |
-| `server` | `port` | TCP 端口，默认 `8080`。 |
-| `server` | `web_dir` | 静态资源目录，默认 `web`。 |
-| `server` | `stale_after_hours` | 快照被标记为陈旧的小时数。 |
-| `server` | `manual_refresh_cooldown_seconds` | 两次可接受手动刷新之间的冷却时间。 |
-| `server` | `request_timeout_seconds` | 单个 HTTP 连接的 socket 超时。 |
-| `server` | `max_connections` | 最大并发 HTTP 连接数。 |
-| `storage` | `data_dir` | 本地持久化快照目录。 |
-| `aws` | `profile` | 可选 AWS CLI profile。 |
-| `aws` | `region` | 传递给 AWS CLI 的区域。 |
-| `aws` | `account_id` | 必填的 12 位预期 AWS 账号。 |
-| `aws` | `data_bucket` | 可选名册和身份映射对象所在 bucket。 |
-| `aws` | `database` | Athena 数据库标识符。 |
-| `aws` | `workgroup` | 配有扫描上限的 Athena WorkGroup。 |
-| `aws` | `identity_store_id` | IAM Identity Center identity store ID。 |
-| `aws` | `application_arn` | 未配置权威订阅 CSV 时必填。 |
-| `aws` | `subscription_csv_key` | 可选的权威活跃订阅名册对象键。 |
-| `aws` | `identity_mapping_key` | 可选的显示名/邮箱映射对象键。 |
-| `aws` | `max_query_scan_bytes` | 每条 Athena 查询的本地扫描字节上限。 |
-| `aws` | `max_s3_object_bytes` | 名册或映射对象的最大大小。 |
-| `aws` | `max_athena_rows` | 每条 Athena 查询最大结果行数。 |
-| `refresh` | `daily_time` | `HH:MM` 每日目标时间；在 `Asia/Shanghai` 主机上使用 `10:00`。 |
-| `refresh` | `retry_delays_seconds` | 刷新失败后的重试延迟。 |
-| `refresh` | `jitter_ratio` | `0` 到 `1` 的重试抖动比例。 |
+| 区段      | 键                                | 含义                                                          |
+| --------- | --------------------------------- | ------------------------------------------------------------- |
+| `server`  | `host`                            | 监听地址。本机预览应保持 `127.0.0.1`。                        |
+| `server`  | `port`                            | TCP 端口，默认 `8080`。                                       |
+| `server`  | `web_dir`                         | 静态资源目录，默认 `web`。                                    |
+| `server`  | `stale_after_hours`               | 快照被标记为陈旧的小时数。                                    |
+| `server`  | `manual_refresh_cooldown_seconds` | 两次可接受手动刷新之间的冷却时间。                            |
+| `server`  | `request_timeout_seconds`         | 单个 HTTP 连接的 socket 超时。                                |
+| `server`  | `max_connections`                 | 最大并发 HTTP 连接数。                                        |
+| `storage` | `data_dir`                        | 本地持久化快照目录。                                          |
+| `aws`     | `profile`                         | 可选 AWS CLI profile。                                        |
+| `aws`     | `region`                          | 传递给 AWS CLI 的区域。                                       |
+| `aws`     | `account_id`                      | 必填的 12 位预期 AWS 账号。                                   |
+| `aws`     | `data_bucket`                     | 可选名册和身份映射对象所在 bucket。                           |
+| `aws`     | `database`                        | Athena 数据库标识符。                                         |
+| `aws`     | `workgroup`                       | 配有扫描上限的 Athena WorkGroup。                             |
+| `aws`     | `identity_store_id`               | IAM Identity Center identity store ID。                       |
+| `aws`     | `application_arn`                 | 未配置权威订阅 CSV 时必填。                                   |
+| `aws`     | `subscription_csv_key`            | 可选的权威活跃订阅名册对象键。                                |
+| `aws`     | `identity_mapping_key`            | 可选的显示名/邮箱映射对象键。                                 |
+| `aws`     | `max_query_scan_bytes`            | 每条 Athena 查询的本地扫描字节上限。                          |
+| `aws`     | `max_s3_object_bytes`             | 名册或映射对象的最大大小。                                    |
+| `aws`     | `max_athena_rows`                 | 每条 Athena 查询最大结果行数。                                |
+| `refresh` | `daily_time`                      | `HH:MM` 每日目标时间；在 `Asia/Shanghai` 主机上使用 `10:00`。 |
+| `refresh` | `retry_delays_seconds`            | 刷新失败后的重试延迟。                                        |
+| `refresh` | `jitter_ratio`                    | `0` 到 `1` 的重试抖动比例。                                   |
 
 加载器会拒绝隐式类型转换、错误账号 ID、错误 Athena 标识符、无效时间、非正数限制和缺少名册来源的配置。
 
@@ -571,13 +665,13 @@ Token 至少 16 个字符。它不会出现在 API 响应、日志、快照、CS
 
 采集器查询 `"<database>"."user_report"`，表必须提供以下列：
 
-| 列 | 所需形态 | 用途 |
-|---|---|---|
-| `date` | Athena `date_parse` 可解析的 `YYYY-MM-DD` 文本 | 上海月份截止日和活动日期。 |
-| `userid` | 非空用户 ID；支持 `directory-id.user-id` 格式 | 账号键。 |
-| `credits_used` | 可转换为 decimal 的值 | 月度 Credits。 |
-| `overage_credits_used` | 可转换为 decimal 的值 | 超额 Credits。 |
-| `subscription_tier` | 套餐文本 | 观察到的最新套餐回退。 |
+| 列                     | 所需形态                                       | 用途                       |
+| ---------------------- | ---------------------------------------------- | -------------------------- |
+| `date`                 | Athena `date_parse` 可解析的 `YYYY-MM-DD` 文本 | 上海月份截止日和活动日期。 |
+| `userid`               | 非空用户 ID；支持 `directory-id.user-id` 格式  | 账号键。                   |
+| `credits_used`         | 可转换为 decimal 的值                          | 月度 Credits。             |
+| `overage_credits_used` | 可转换为 decimal 的值                          | 超额 Credits。             |
+| `subscription_tier`    | 套餐文本                                       | 观察到的最新套餐回退。     |
 
 采集器先查询当前上海自然月的 `MAX(date)`，再将月度用量和套餐回退限制到该截止日加一天的开区间。没有截止日时，生成 `data_cutoff = null`；名册账号仍会展示，并明确说明零值不能证明未使用。
 
@@ -587,15 +681,15 @@ Token 至少 16 个字符。它不会出现在 API 响应、日志、快照、CS
 
 支持的字段别名：
 
-| 标准字段 | 支持表头 |
-|---|---|
-| 用户 ID | `userid`、`user_id` |
-| 名称 | `user_name`、`username`、`name` |
-| 邮箱 | `email` |
-| 订阅状态 | `subscription_status`、`status` |
-| 套餐 | `subscription_tier`、`kiro_plan`、`plan` |
-| 激活日期 | `activation_date` |
-| 来源 | `plan_source`、`source` |
+| 标准字段 | 支持表头                                 |
+| -------- | ---------------------------------------- |
+| 用户 ID  | `userid`、`user_id`                      |
+| 名称     | `user_name`、`username`、`name`          |
+| 邮箱     | `email`                                  |
+| 订阅状态 | `subscription_status`、`status`          |
+| 套餐     | `subscription_tier`、`kiro_plan`、`plan` |
+| 激活日期 | `activation_date`                        |
+| 来源     | `plan_source`、`source`                  |
 
 接受的活跃状态为 `ACTIVE`、`ENABLED`、`SUBSCRIBED`、`PENDING`。明确非活跃状态包括 `CANCELLED`、`CANCELED`、`INACTIVE`、`DELETED`、`DISABLED`、`EXPIRED`、`SUSPENDED`、`UNASSIGNED`、`UNSUBSCRIBED`、`REVOKED`。缺少状态时默认 `ACTIVE`；显式提供但无法识别的状态会使刷新失败，而不是猜测。
 
@@ -670,14 +764,14 @@ data/history/YYYY/MM/<timestamp>-<hash>.json
 
 ### Web API
 
-| 方法 | 路径 | 响应 |
-|---|---|---|
-| `GET` | `/api/current` | 最新有效快照；没有可用快照时返回 `503`。 |
-| `GET` | `/api/health` | 健康、陈旧、重试和手动刷新可用性。 |
-| `GET` | `/api/history` | 按新到旧排列的历史元数据，不含历史用户行。 |
-| `GET` | `/api/export.csv` | 从当前有效快照生成 UTF-8 BOM CSV。 |
-| `POST` | `/api/reload` | 重读本地有效快照，不调用 AWS。 |
-| `POST` | `/api/refresh` | 验证 `X-Refresh-Token` 后启动后台采集。 |
+| 方法   | 路径              | 响应                                       |
+| ------ | ----------------- | ------------------------------------------ |
+| `GET`  | `/api/current`    | 最新有效快照；没有可用快照时返回 `503`。   |
+| `GET`  | `/api/health`     | 健康、陈旧、重试和手动刷新可用性。         |
+| `GET`  | `/api/history`    | 按新到旧排列的历史元数据，不含历史用户行。 |
+| `GET`  | `/api/export.csv` | 从当前有效快照生成 UTF-8 BOM CSV。         |
+| `POST` | `/api/reload`     | 重读本地有效快照，不调用 AWS。             |
+| `POST` | `/api/refresh`    | 验证 `X-Refresh-Token` 后启动后台采集。    |
 
 POST 接口刻意拒绝请求体和 transfer encoding。响应包含 `X-Content-Type-Options: nosniff`、`Referrer-Policy: no-referrer`、`X-Frame-Options: DENY` 和严格同源 CSP。
 
@@ -788,9 +882,103 @@ python3 -m app.server
 python3 -m app.refresh --retry
 ```
 
-Linux 可以使用支持时区的 systemd timer，例如 `OnCalendar=*-*-* 10:00:00 Asia/Shanghai`。未来容器化时，可以将 Web 服务和刷新任务作为独立进程运行，并将 `data/` 挂载为持久卷。前端只依赖 `/api/*` 与 schema-v1 快照契约，因此后续可以更换服务端实现而不重构页面壳层。
+### Docker Compose 容器化部署
 
-当前版本明确不包含：公网托管、自动防火墙变更、Docker 镜像发布、Cognito 配置、公开读取部署和自动安装调度器。
+`docker/` 目录集中保存可移植 Linux `docker/Dockerfile`、`docker/compose.yaml`、`docker/container.env.example` 和 `docker/kiro-credit-usage.crontab.template`。根目录 `.dockerignore` 与仓库根 build context 保持在一起，用于排除私有配置、凭证、快照和仅开发期文件。镜像需要 Docker BuildKit 提供 `TARGETARCH`，缺失时会明确失败而不猜测架构。Python 基础镜像 manifest 和 AWS CLI v2 安装包均使用 SHA-256 固定，安装前会验证对应归档摘要。Debian 软件包下载默认使用适配中国大陆网络的清华 TUNA 镜像；海外部署可用官方 `deb.debian.org` URL 覆盖两个 Debian 镜像变量。APT 仍会验证 Debian 仓库 Release 签名。参见 [AWS CLI v2 Linux 安装文档](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)。
+
+推送精确 Git 发布 tag，例如 `v0.1.1`，会运行 `Publish Docker image` GitHub Actions 工作流。它会构建并发布同时支持 `linux/amd64` 与 `linux/arm64` 的单个 Docker Hub manifest，标签为 `chowrex/kiro-credit-usage-web:0.1.1` 和 `chowrex/kiro-credit-usage-web:latest`。工作流需要名为 `DOCKERHUB_USERNAME` 和 `DOCKERHUB_TOKEN` 的仓库 Secret，不会发布无 tag 或分支构建。
+
+Compose 将两个角色分离：
+
+```text
+web      长期运行的看板，按初始方案直接发布到 0.0.0.0:8080。
+refresh  一次性刷新进程，仅由人工或宿主机 crontab 启动。
+```
+
+两个服务共享同一个可写的宿主机 `data/` bind mount，现有刷新锁会阻止并发写入。配置文件和宿主机 AWS profile 目录以只读方式挂载，只有 `web` 服务挂载管理员 Token 文件。容器使用宿主机服务账号的数字 UID/GID 运行，移除 Linux capabilities，禁止权限提升，根文件系统只读，只在 `/tmp` 提供可写临时文件系统。
+
+Bind mount 有意让快照、凭证、配置和日志保留在 Docker daemon 宿主机而不是镜像中。Docker 说明 bind mount 依赖宿主机文件系统，因此只挂载明确路径，并对不需要写入的路径使用只读挂载。参见 [Docker bind-mount 文档](https://docs.docker.com/engine/storage/bind-mounts/)。
+
+#### 服务器准备
+
+不要把真实文件复制到仓库中。在服务器上创建受保护的部署目录，并在检出的源码目录之外创建 Compose 环境文件：
+
+```bash
+cp docker/container.env.example /etc/kiro-credit-usage/container.env
+chmod 600 /etc/kiro-credit-usage/container.env
+```
+
+环境文件中只填写 Docker daemon 宿主机的绝对路径，并保留或按部署地区覆盖 Debian 镜像变量：
+
+```dotenv
+KIRO_UID=1000
+KIRO_GID=1000
+KIRO_CONFIG_FILE=/srv/kiro-credit-usage/config.local.toml
+KIRO_DATA_DIR=/srv/kiro-credit-usage/data
+KIRO_AWS_DIR=/srv/kiro-credit-usage/aws-profile
+KIRO_ADMIN_TOKEN_FILE=/srv/kiro-credit-usage/.admin-token
+KIRO_HTTP_PORT=8080
+KIRO_IMAGE_TAG=0.1.1
+DEBIAN_MIRROR=https://mirrors.tuna.tsinghua.edu.cn/debian
+DEBIAN_SECURITY_MIRROR=https://mirrors.tuna.tsinghua.edu.cn/debian-security
+```
+
+`KIRO_UID` 和 `KIRO_GID` 必须与配置、数据目录、AWS profile 目录和 Token 文件的拥有者一致。Token 文件权限必须为 `0600` 或更严格。该 Compose 文件按常规 rootful Docker daemon 且数字 UID 映射一致的场景设计；使用 rootless Docker 或 userns-remap 前必须单独验证文件所有权。Debian APT 默认使用清华 TUNA 镜像以适配中国大陆网络；海外部署可将两个 `DEBIAN_*_MIRROR` 变量覆盖为官方 `https://deb.debian.org` URL。这样既保留应用的 owner-only Token 校验，也只允许容器写入挂载的数据目录。
+
+将标准 AWS profile 目录挂载为 `KIRO_AWS_DIR`。profile 名称和 region 仍保留在私有 `config.local.toml` 中。`storage.data_dir` 必须保持为 `"data"`，或显式设为 `/app/data`，因为其他宿主机绝对路径会在容器只读根文件系统内解析。镜像不包含任何 AWS 账号、分区、端点、region、profile 名称、ARN 或 Identity Center 标识。AWS CLI 根据 profile 与 region 选择国际区或中国区对应分区。可以只读挂载 SSO profile，但无人值守的 cron 刷新会在 SSO 缓存会话过期后失败。依赖可写本地缓存的 credential helper 也可能因为同一原因失败。长期无人值守应使用服务器认可的可续期凭证机制。
+
+启动前先验证 Compose 变量插值：
+
+```bash
+/usr/bin/docker compose \
+  --env-file /etc/kiro-credit-usage/container.env \
+  -f docker/compose.yaml config
+```
+
+人工审查后，如需在本地从源码构建，请设置 `KIRO_IMAGE_TAG=local` 并仅启动 Web 服务：
+
+```bash
+/usr/bin/docker compose \
+  --env-file /etc/kiro-credit-usage/container.env \
+  -f docker/compose.yaml up --build --detach web
+```
+
+服务器或其他测试已发布多架构镜像的主机应保留已发布的 `KIRO_IMAGE_TAG`，例如 `0.1.1`，然后拉取镜像并在不构建的情况下启动：
+
+```bash
+/usr/bin/docker compose \
+  --env-file /etc/kiro-credit-usage/container.env \
+  -f docker/compose.yaml pull web
+/usr/bin/docker compose \
+  --env-file /etc/kiro-credit-usage/container.env \
+  -f docker/compose.yaml up --no-build --detach web
+```
+
+直接宿主机端口绑定遵循当前内网部署选择，但它仍是匿名 HTTP 读取，绝不能映射到公网。扩大范围前必须增加 TLS、网络限制和个人认证。
+
+需要时，使用已经拉取或本地构建的镜像执行一次受控刷新容器：
+
+```bash
+/usr/bin/docker compose \
+  --env-file /etc/kiro-credit-usage/container.env \
+  -f docker/compose.yaml run --rm --no-build refresh
+```
+
+这条命令会发起 Athena 查询并更新宿主机数据目录。它不会挂载管理员刷新 Token 文件。
+
+#### 宿主机 crontab 模板
+
+Cron 是宿主机调度器，不是第三个容器。提供的模板会在北京时间每天 10:00 启动一次临时 `refresh` 容器，并在任务结束后移除：
+
+```text
+docker/kiro-credit-usage.crontab.template
+```
+
+替换模板中的绝对路径占位符并人工审查后，运维人员可以将其写入专用服务账号的 crontab。Compose 环境文件必须可由同一账号读取，配置的 cron 日志父目录必须在安装前创建并允许该账号写入。模板使用 `CRON_TZ=Asia/Shanghai`、明确 Docker 路径、明确 Compose 环境文件和明确日志路径。项目不会自动安装或修改 crontab。
+
+Cron 不会在主机停机后自动补跑。若需要错过任务恢复、journal 集成或更严格的服务隔离，应将宿主机 cron 行替换为支持时区的 systemd timer，例如 `OnCalendar=*-*-* 10:00:00 Asia/Shanghai` 和 `Persistent=true`。
+
+前端只依赖 `/api/*` 与 schema-v1 快照契约，因此后续可以替换服务端实现而不重构页面壳层。当前仍不包含：公网托管、自动防火墙变更、Cognito 配置、公开读取部署和自动安装调度器。
 
 ### 许可证与名称
 

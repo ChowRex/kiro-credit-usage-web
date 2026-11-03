@@ -1,0 +1,109 @@
+name: kiro-credit-usage
+
+services:
+  web:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      args:
+        DEBIAN_MIRROR: ${DEBIAN_MIRROR:-https://mirrors.tuna.tsinghua.edu.cn/debian}
+        DEBIAN_SECURITY_MIRROR: ${DEBIAN_SECURITY_MIRROR:-https://mirrors.tuna.tsinghua.edu.cn/debian-security}
+    image: chowrex/kiro-credit-usage-web:${KIRO_IMAGE_TAG:-local}
+    command:
+      [
+        "python",
+        "-m",
+        "app.server",
+        "--config",
+        "/app/config.local.toml",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8080",
+        "--admin-token-file",
+        "/run/kiro/refresh-token",
+      ]
+    user: "${KIRO_UID:?Set KIRO_UID}:${KIRO_GID:?Set KIRO_GID}"
+    environment:
+      HOME: /home/kiro
+      TZ: Asia/Shanghai
+    ports:
+      - target: 8080
+        published: "${KIRO_HTTP_PORT:-8080}"
+        host_ip: 0.0.0.0
+        protocol: tcp
+    volumes:
+      - type: bind
+        source: ${KIRO_CONFIG_FILE:?Set KIRO_CONFIG_FILE to an absolute config.local.toml path}
+        target: /app/config.local.toml
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${KIRO_DATA_DIR:?Set KIRO_DATA_DIR to an absolute writable data directory}
+        target: /app/data
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${KIRO_AWS_DIR:?Set KIRO_AWS_DIR to an absolute AWS profile directory}
+        target: /home/kiro/.aws
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${KIRO_ADMIN_TOKEN_FILE:?Set KIRO_ADMIN_TOKEN_FILE to an owner-only token file}
+        target: /run/kiro/refresh-token
+        read_only: true
+        bind:
+          create_host_path: false
+    read_only: true
+    tmpfs:
+      - /tmp:mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    init: true
+    restart: unless-stopped
+
+  refresh:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      args:
+        DEBIAN_MIRROR: ${DEBIAN_MIRROR:-https://mirrors.tuna.tsinghua.edu.cn/debian}
+        DEBIAN_SECURITY_MIRROR: ${DEBIAN_SECURITY_MIRROR:-https://mirrors.tuna.tsinghua.edu.cn/debian-security}
+    image: chowrex/kiro-credit-usage-web:${KIRO_IMAGE_TAG:-local}
+    command: ["python", "-m", "app.refresh", "--config", "/app/config.local.toml", "--retry"]
+    user: "${KIRO_UID:?Set KIRO_UID}:${KIRO_GID:?Set KIRO_GID}"
+    environment:
+      HOME: /home/kiro
+      TZ: Asia/Shanghai
+    volumes:
+      - type: bind
+        source: ${KIRO_CONFIG_FILE:?Set KIRO_CONFIG_FILE to an absolute config.local.toml path}
+        target: /app/config.local.toml
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${KIRO_DATA_DIR:?Set KIRO_DATA_DIR to an absolute writable data directory}
+        target: /app/data
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${KIRO_AWS_DIR:?Set KIRO_AWS_DIR to an absolute AWS profile directory}
+        target: /home/kiro/.aws
+        read_only: true
+        bind:
+          create_host_path: false
+    read_only: true
+    tmpfs:
+      - /tmp:mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    init: true
+    profiles:
+      - refresh
