@@ -25,14 +25,11 @@
   --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.04);
   --shadow-md: 0 8px 24px rgba(16, 24, 40, 0.06);
   font-family:
-    Inter,
-    ui-sans-serif,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    "PingFang SC",
-    "Microsoft YaHei",
-    sans-serif;
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-synthesis: none;
+}
+html {
+  scrollbar-gutter: stable;
 }
 
 * {
@@ -56,11 +53,11 @@ a {
 }
 
 .topbar {
-  display: flex;
+  display: grid;
   position: sticky;
   top: 0;
   z-index: 20;
-  justify-content: space-between;
+  grid-template-columns: minmax(0, 1fr) 30rem;
   align-items: center;
   gap: 2rem;
   padding: 1.15rem max(2rem, calc((100vw - 1440px) / 2));
@@ -69,29 +66,52 @@ a {
   box-shadow: var(--shadow-sm);
   backdrop-filter: blur(14px);
 }
+.brand {
+  display: grid;
+  min-width: 0;
+  grid-template-rows: 1rem 2.4rem 1.25rem;
+  row-gap: 0.35rem;
+}
+.topbar h1 {
+  white-space: nowrap;
+}
 .eyebrow {
-  margin: 0 0 0.35rem;
+  margin: 0;
   color: var(--brand);
   font-size: 0.68rem;
-  font-weight: 750;
+  font-weight: 700;
+  line-height: 1rem;
   letter-spacing: 0.14em;
 }
 h1 {
   margin: 0;
   font-size: clamp(1.45rem, 2.2vw, 1.9rem);
-  font-weight: 720;
+  font-weight: 700;
+  line-height: 1.2;
   letter-spacing: -0.025em;
 }
 .subtitle {
-  margin: 0.35rem 0 0;
+  align-self: center;
+  margin: 0;
   color: var(--muted);
   font-size: 0.88rem;
+  line-height: 1.25rem;
 }
 .actions {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  width: 30rem;
+  grid-template-columns: 38px repeat(3, minmax(0, 1fr));
   gap: 0.55rem;
-  justify-content: flex-end;
+  align-items: stretch;
+}
+.actions .button {
+  inline-size: 100%;
+  min-inline-size: 0;
+  white-space: nowrap;
+}
+.actions .language-toggle {
+  inline-size: 38px;
+  padding-inline: 0;
 }
 .button {
   display: inline-flex;
@@ -105,7 +125,8 @@ h1 {
   background: var(--surface);
   cursor: pointer;
   font-size: 0.86rem;
-  font-weight: 620;
+  font-weight: 600;
+  line-height: 1.2;
   text-decoration: none;
   box-shadow: var(--shadow-sm);
   transition:
@@ -684,6 +705,13 @@ footer {
 }
 
 @media (max-width: 1050px) {
+  .topbar {
+    grid-template-columns: 1fr;
+  }
+  .actions {
+    width: min(100%, 30rem);
+    justify-self: end;
+  }
   .time-panel {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -718,9 +746,19 @@ footer {
     display: block;
     padding: 1.1rem 1rem;
   }
+  .topbar h1 {
+    white-space: normal;
+  }
+  .brand {
+    grid-template-rows: 1rem 4.8rem 1.25rem;
+  }
   .actions {
-    justify-content: flex-start;
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     margin-top: 1rem;
+  }
+  .actions .language-toggle {
+    justify-self: start;
   }
   main {
     padding: 1rem;

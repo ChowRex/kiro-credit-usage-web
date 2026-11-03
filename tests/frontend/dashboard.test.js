@@ -79,6 +79,22 @@ describe("credit usage dashboard", () => {
     expect(storageWrite).not.toHaveBeenCalled();
   });
 
+  it("keeps the same toolbar controls when switching language", async () => {
+    await bootDashboard(createFetch({ snapshot: createSnapshot() }), { language: "en-US" });
+
+    const actions = document.querySelector(".actions");
+    const controls = [...actions.children];
+    document.getElementById("languageToggle").click();
+
+    expect([...actions.children]).toEqual(controls);
+    expect(controls).toHaveLength(4);
+    expect(controls[0].id).toBe("languageToggle");
+    expect(controls[1].textContent.trim()).toBe("重新读取");
+    expect(controls[2].textContent.trim()).toBe("立即同步 AWS");
+    expect(controls[3].textContent.trim()).toBe("下载 CSV");
+    expect(controls[0].getAttribute("aria-label")).toBe("切换为 English");
+  });
+
   it("selects Chinese for a zh browser language and filters rendered users", async () => {
     const users = [
       createUser({
