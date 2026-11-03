@@ -1,0 +1,44 @@
+# Python bytecode, virtual environments, test reports, and tool caches
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pylint.d/
+.coverage
+.coverage.*
+htmlcov/
+
+# JavaScript dependencies and diagnostics
+node_modules/
+.eslintcache
+.stylelintcache
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local configuration, credentials, certificates, and infrastructure state
+.env
+.env.*
+*.env
+.envrc
+.admin-token
+config.local*.toml
+config.*.local.toml
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+*.tfvars
+*.tfstate
+*.tfstate.*
+
+# Local runtime data, generated artifacts, and logs
+data/*
+!data/.gitkeep
+build/
+*.log
+.DS_Store

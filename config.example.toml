@@ -1,0 +1,31 @@
+[server]
+host = "127.0.0.1"
+port = 8080
+web_dir = "web"
+stale_after_hours = 30
+manual_refresh_cooldown_seconds = 300
+request_timeout_seconds = 15
+max_connections = 32
+
+[storage]
+data_dir = "data"
+
+[aws]
+profile = "your-aws-profile"
+region = "us-east-1"
+account_id = "YOUR_ACCOUNT_ID" # Must remain a quoted 12-digit string.
+data_bucket = "your-kiro-reports-bucket"
+database = "kiro_analytics"
+workgroup = "kiro-analytics-workgroup"
+identity_store_id = "d-xxxxxxxxxx"
+application_arn = "arn:aws:sso::YOUR_ACCOUNT_ID:application/ssoins-xxxxxxxxxxxxxxxx/apl-xxxxxxxxxxxxxxxx"
+subscription_csv_key = ""
+identity_mapping_key = "user-mapping/user_mapping.csv"
+max_query_scan_bytes = 104857600 # Integer: 100 MiB completed-query guard.
+max_s3_object_bytes = 5242880 # Integer: 5 MiB roster/mapping input limit.
+max_athena_rows = 100000 # Integer row limit.
+
+[refresh]
+daily_time = "10:00" # launchd uses the host's Asia/Shanghai local time.
+retry_delays_seconds = [60, 300, 900, 1800] # Integer seconds.
+jitter_ratio = 0.2

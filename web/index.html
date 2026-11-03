@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>Kiro Credits 用量看板</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow" data-i18n="eyebrow">KIRO 企业版 · 内部</p>
+        <h1 data-i18n="pageTitle">Kiro Credits 用量看板</h1>
+        <p id="subtitle" class="subtitle" data-i18n="loadingSnapshot">正在读取最新成功快照…</p>
+      </div>
+      <div class="actions">
+        <button
+          id="languageToggle"
+          type="button"
+          class="button secondary"
+          aria-label="切换为 English"
+          title="切换为 English"
+        >
+          <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none">
+            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8" />
+            <path
+              d="M3 12h18M12 3c2.3 2.5 3.5 5.5 3.5 9S14.3 18.5 12 21M12 3c-2.3 2.5-3.5 5.5-3.5 9S9.7 18.5 12 21"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+        </button>
+        <button id="reload" type="button" class="button secondary" data-i18n="reload">
+          重新读取
+        </button>
+        <button id="refresh" type="button" class="button danger" data-i18n="refresh">
+          立即同步 AWS
+        </button>
+        <a class="button primary" href="/api/export.csv" data-i18n="downloadCsv">下载 CSV</a>
+      </div>
+    </header>
+
+    <main>
+      <section
+        id="healthBanner"
+        class="health loading"
+        aria-live="polite"
+        data-i18n="checkingRefresh"
+      >
+        正在检查刷新状态…
+      </section>
+      <section
+        id="dataNotice"
+        class="data-notice"
+        aria-live="polite"
+        data-i18n="loadingInterpretation"
+      >
+        正在读取数据口径…
+      </section>
+
+      <section class="time-panel" aria-labelledby="timeTitle">
+        <header class="time-panel-head">
+          <h2 id="timeTitle" data-i18n="dataTime">数据时间</h2>
+          <span data-i18n="browserTime">以下时间按浏览器本地时间显示</span>
+        </header>
+        <article>
+          <span data-i18n="dataCutoff">数据截止日</span><strong id="timeCutoff">—</strong>
+        </article>
+        <article>
+          <span data-i18n="snapshotGenerated">快照生成时间</span
+          ><strong id="timeGenerated">—</strong>
+        </article>
+        <article>
+          <span data-i18n="lastSuccessfulRefresh">最后成功刷新</span
+          ><strong id="timeLastSuccess">—</strong>
+        </article>
+        <article class="delay">
+          <span data-i18n="dataFreshness">数据时效</span
+          ><strong id="timeDelay" data-i18n="loadingFreshness">正在读取数据时效说明…</strong>
+        </article>
+      </section>
+
+      <section class="dashboard-section" aria-labelledby="overviewTitle">
+        <div class="section-heading">
+          <div>
+            <p data-i18n="overviewKicker">总体概览</p>
+            <h2 id="overviewTitle" data-i18n="overview">总体概览</h2>
+          </div>
+          <span data-i18n="overviewDescription">组织当前资源与采集成本</span>
+        </div>
+        <div class="overview-grid">
+          <article class="kpi">
+            <span data-i18n="totalUsers">总用户</span><strong id="kpiUsers">—</strong
+            ><small data-i18n="currentRoster">当前订阅名册</small>
+          </article>
+          <article class="kpi">
+            <span data-i18n="totalCredits">累计 Credits</span><strong id="kpiCredits">—</strong
+            ><small data-i18n="throughLatestDataDay">截至最新数据日</small>
+          </article>
+          <article class="kpi">
+            <span data-i18n="knownMonthlyCost">月成本合计（已知）</span
+            ><strong id="kpiCost">—</strong><small id="kpiUnknownCost">成本未知 — 人</small>
+          </article>
+          <article class="kpi">
+            <span data-i18n="athenaScanned">Athena 扫描</span><strong id="kpiScan">—</strong
+            ><small id="kpiQueries">本次查询 — 次</small>
+          </article>
+        </div>
+      </section>
+
+      <section class="dashboard-section" aria-labelledby="subscriptionTitle">
+        <div class="section-heading">
+          <div>
+            <p data-i18n="accountStatusKicker">账户状态</p>
+            <h2 id="subscriptionTitle" data-i18n="accountStatus">账户状态</h2>
+          </div>
+          <span data-i18n="accountStatusDescription">根据数据截止日前的用量证据判断</span>
+        </div>
+        <div class="subscription-panel">
+          <article>
+            <span class="status-marker active"></span>
+            <div>
+              <small data-i18n="active">活跃</small><strong id="subscriptionActive">—</strong>
+            </div>
+          </article>
+          <article>
+            <span class="status-marker unknown"></span>
+            <div>
+              <small data-i18n="unknownStatus">未知状态</small
+              ><strong id="subscriptionUnknown">—</strong>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="dashboard-section" aria-labelledby="distributionTitle">
+        <div class="section-heading">
+          <div>
+            <p data-i18n="usageDistributionKicker">用户用量分布</p>
+            <h2 id="distributionTitle" data-i18n="usageDistribution">用户用量分布</h2>
+          </div>
+          <span id="distributionMeta">正在计算可评估人数…</span>
+        </div>
+        <div class="distribution-panel">
+          <div class="distribution-stats">
+            <article class="status-stat zero">
+              <span data-i18n="statusZero">零使用</span><strong id="kpiZero">—</strong
+              ><progress
+                id="distributionZero"
+                class="distribution-meter zero"
+                max="1"
+                value="0"
+              ></progress
+              ><small
+                ><span data-i18n="distributionZeroDescription">本月无 Credits · </span
+                ><b id="distributionZeroPercent">—</b></small
+              >
+            </article>
+            <article class="status-stat low">
+              <span data-i18n="statusLow">低使用</span><strong id="kpiLow">—</strong
+              ><progress
+                id="distributionLow"
+                class="distribution-meter low"
+                max="1"
+                value="0"
+              ></progress
+              ><small
+                ><span data-i18n="distributionLowDescription">非零且低于 10% · </span
+                ><b id="distributionLowPercent">—</b></small
+              >
+            </article>
+            <article class="status-stat medium">
+              <span data-i18n="statusMedium">中使用</span><strong id="kpiMedium">—</strong
+              ><progress
+                id="distributionMedium"
+                class="distribution-meter medium"
+                max="1"
+                value="0"
+              ></progress
+              ><small
+                ><span data-i18n="distributionMediumDescription">10%–&lt;50% · </span
+                ><b id="distributionMediumPercent">—</b></small
+              >
+            </article>
+            <article class="status-stat normal">
+              <span data-i18n="statusNormal">正常</span><strong id="kpiNormal">—</strong
+              ><progress
+                id="distributionNormal"
+                class="distribution-meter normal"
+                max="1"
+                value="0"
+              ></progress
+              ><small
+                ><span data-i18n="distributionNormalDescription">50%–80% · </span
+                ><b id="distributionNormalPercent">—</b></small
+              >
+            </article>
+            <article class="status-stat high">
+              <span data-i18n="statusHigh">高负载</span><strong id="kpiHigh">—</strong
+              ><progress
+                id="distributionHigh"
+                class="distribution-meter high"
+                max="1"
+                value="0"
+              ></progress
+              ><small
+                ><span data-i18n="distributionHighDescription">超过 80% · </span
+                ><b id="distributionHighPercent">—</b></small
+              >
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2 id="userTableTitle" data-i18n="userDetails">用户明细</h2>
+            <p
+              id="resultCount"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+              data-i18n="loading"
+            >
+              正在加载…
+            </p>
+          </div>
+          <div class="filters">
+            <label>
+              <span data-i18n="search">搜索</span>
+              <input
+                id="search"
+                type="search"
+                placeholder="姓名或邮箱"
+                data-i18n-placeholder="searchPlaceholder"
+                autocomplete="off"
+              />
+            </label>
+            <label>
+              <span data-i18n="status">状态</span>
+              <select id="statusFilter">
+                <option value="" data-i18n="allStatuses">全部状态</option>
+                <option value="zero" data-i18n="statusZero">零使用</option>
+                <option value="low" data-i18n="statusLow">低使用</option>
+                <option value="medium" data-i18n="statusMedium">中使用</option>
+                <option value="normal" data-i18n="statusNormal">正常</option>
+                <option value="high" data-i18n="statusHigh">高负载</option>
+                <option value="unknown" data-i18n="statusUnknown">套餐/容量未知</option>
+              </select>
+            </label>
+            <label>
+              <span data-i18n="tier">套餐</span>
+              <select id="tierFilter">
+                <option value="" data-i18n="allTiers">全部套餐</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table aria-labelledby="userTableTitle">
+            <thead>
+              <tr>
+                <th scope="col">
+                  <button type="button" data-sort="user_name" data-i18n="user">用户</button>
+                </th>
+                <th scope="col">
+                  <button type="button" data-sort="email" data-i18n="email">邮箱</button>
+                </th>
+                <th scope="col" data-i18n="accountStatus">账户状态</th>
+                <th scope="col">
+                  <button type="button" data-sort="tier" data-i18n="tier">套餐</button>
+                </th>
+                <th scope="col">
+                  <button type="button" data-sort="credits" data-i18n="creditsCapacity">
+                    Credits / 容量
+                  </button>
+                </th>
+                <th scope="col">
+                  <button type="button" data-sort="usage_percent" data-i18n="usageRate">
+                    使用率
+                  </button>
+                </th>
+                <th scope="col">
+                  <button type="button" data-sort="last_active" data-i18n="lastActive">
+                    最后活跃
+                  </button>
+                </th>
+                <th scope="col">
+                  <button type="button" data-sort="active_days" data-i18n="activeDays">
+                    活跃天数
+                  </button>
+                </th>
+                <th scope="col">
+                  <button type="button" data-sort="status" data-i18n="status">状态</button>
+                </th>
+                <th scope="col">
+                  <button type="button" data-sort="monthly_cost_usd" data-i18n="monthlyCost">
+                    月成本
+                  </button>
+                </th>
+                <th scope="col" data-i18n="tierSource">套餐来源</th>
+              </tr>
+            </thead>
+            <tbody id="userRows"></tbody>
+          </table>
+          <div id="empty" class="empty" hidden data-i18n="noMatchingUsers">
+            没有符合当前筛选条件的用户。
+          </div>
+        </div>
+      </section>
+
+      <section class="panel history-panel" aria-labelledby="historyTitle">
+        <div class="panel-head">
+          <div>
+            <h2 id="historyTitle" data-i18n="recentSnapshots">最近快照</h2>
+            <p data-i18n="historyDescription">永久历史中的最近 5 次有效记录，仅展示摘要。</p>
+          </div>
+        </div>
+        <ol id="historyList" class="history-list"></ol>
+        <div id="historyEmpty" class="empty" data-i18n="noHistory">暂无历史快照。</div>
+      </section>
+    </main>
+
+    <footer><span id="footerMeta">—</span></footer>
+    <dialog id="refreshDialog" class="refresh-dialog" aria-labelledby="refreshDialogTitle" hidden>
+      <form id="refreshForm">
+        <h2 id="refreshDialogTitle" data-i18n="adminSync">管理员同步</h2>
+        <p data-i18n="refreshDialogDescription">
+          请输入管理员 Token 以启动 AWS 数据同步。Token 仅用于本次请求，不会保存在浏览器中。
+        </p>
+        <label for="refreshToken" data-i18n="adminToken">管理员 Token</label>
+        <input
+          id="refreshToken"
+          name="refreshToken"
+          type="password"
+          autocomplete="current-password"
+          required
+        />
+        <div class="dialog-actions">
+          <button id="refreshCancel" type="button" class="button secondary" data-i18n="cancel">
+            取消
+          </button>
+          <button type="submit" class="button danger" data-i18n="startSync">启动同步</button>
+        </div>
+      </form>
+    </dialog>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script src="/app.js" defer></script>
+  </body>
+</html>
