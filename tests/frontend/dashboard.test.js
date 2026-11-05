@@ -45,9 +45,6 @@ describe("credit usage dashboard", () => {
     expect(document.getElementById("timeDelay").textContent).toContain(
       "Kiro source data is typically delayed",
     );
-    expect(document.getElementById("dataNotice").textContent).toBe(
-      "Usage is cumulative through the data cutoff",
-    );
     expect(document.getElementById("healthBanner").textContent).toContain(
       "Data updates are failing",
     );
@@ -55,9 +52,6 @@ describe("credit usage dashboard", () => {
       "Medium usage: 1 users, 100% of evaluable users",
     );
     expect(document.querySelector("#userRows tr").cells[8].textContent).toBe("Medium usage");
-    expect(document.querySelector("#userRows tr").cells[10].textContent).toBe(
-      "Usage record at the data cutoff",
-    );
     expect(document.getElementById("historyList").textContent).toContain("legacy record");
 
     document.getElementById("languageToggle").click();
@@ -68,13 +62,12 @@ describe("credit usage dashboard", () => {
     expect(document.getElementById("timeDelay").textContent).toContain(
       "Kiro 源数据通常存在 1–2 天延迟",
     );
-    expect(document.getElementById("dataNotice").textContent).toBe("用量累计至数据截止日");
-    expect(document.getElementById("statusFilter").options[3].textContent).toBe("中使用");
+    expect(document.getElementById("statusFilter").options[3].textContent).toBe("中使用量");
     expect(document.getElementById("healthBanner").textContent).toContain("数据更新异常");
     expect(document.getElementById("distributionMedium").getAttribute("aria-label")).toBe(
-      "中使用 1 人，占可评估用户 100%",
+      "中使用量 1 人，占可评估用户 100%",
     );
-    expect(document.querySelector("#userRows tr").cells[8].textContent).toBe("中使用");
+    expect(document.querySelector("#userRows tr").cells[8].textContent).toBe("中使用量");
     expect(document.getElementById("historyList").textContent).toContain("旧版记录");
     expect(storageWrite).not.toHaveBeenCalled();
   });
@@ -249,5 +242,42 @@ describe("credit usage dashboard", () => {
     await flushDashboard();
     expect(document.querySelector("#userRows td").textContent).toBe("Newest");
     expect(reload.disabled).toBe(false);
+  });
+});
+
+describe("revised usage presentation", () => {
+  it("renders inactive accounts, ungrouped capacity, and no tier-source column", async () => {
+    const users = [
+      createUser({
+        credits: 0,
+        capacity: 10000,
+        first_active: "",
+        last_active: "",
+        active_days: 0,
+        status: "zero",
+      }),
+    ];
+    await bootDashboard(createFetch({ snapshot: createSnapshot(users) }));
+
+    const row = document.querySelector("#userRows tr");
+    expect(row.cells).toHaveLength(10);
+    expect(row.cells[2].textContent).toBe("不活跃");
+    expect(row.cells[4].textContent).toContain("10000");
+    expect(row.cells[4].textContent).not.toContain("10,000");
+    expect(document.getElementById("dataNotice")).toBeNull();
+    expect(document.querySelector('[data-i18n="tierSource"]')).toBeNull();
+  });
+});
+
+describe("no current-month data", () => {
+  it("hides account-status presentation rather than inferring inactivity", async () => {
+    const snapshot = createSnapshot([createUser({ credits: 0, active_days: 0 })]);
+    snapshot.no_month_data = true;
+    snapshot.data_cutoff = null;
+    await bootDashboard(createFetch({ snapshot }));
+
+    expect(document.getElementById("accountStatusSection").hidden).toBe(true);
+    expect(document.getElementById("accountStatusColumn").hidden).toBe(true);
+    expect(document.querySelector("#userRows tr").cells).toHaveLength(9);
   });
 });

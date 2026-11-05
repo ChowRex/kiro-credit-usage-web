@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Kiro Credit Usage Web purpose</title>
+  <desc id="desc">A privacy-safe illustration showing usage data becoming a validated dashboard, CSV export, and actionable insights.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#081a33"/><stop offset="1" stop-color="#173b65"/></linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#5eead4"/><stop offset="1" stop-color="#60a5fa"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="12" stdDeviation="15" flood-opacity=".24"/></filter>
+  </defs>
+  <rect width="1200" height="675" fill="url(#bg)" rx="32"/>
+  <circle cx="1060" cy="90" r="180" fill="#38bdf8" opacity=".12"/><circle cx="100" cy="610" r="200" fill="#2dd4bf" opacity=".09"/>
+  <text x="72" y="92" fill="#dbeafe" font-family="Arial, sans-serif" font-size="22" font-weight="700" letter-spacing="3">KIRO CREDIT USAGE WEB</text>
+  <text x="72" y="148" fill="white" font-family="Arial, sans-serif" font-size="43" font-weight="700">Turn usage records into useful decisions</text>
+  <text x="72" y="184" fill="#bfdbfe" font-family="Arial, sans-serif" font-size="21">A local-first dashboard for spotting unused subscriptions before credits are wasted.</text>
+  <g filter="url(#shadow)">
+    <rect x="72" y="258" width="280" height="262" rx="22" fill="#102b4d" stroke="#315d8c"/>
+    <rect x="100" y="291" width="60" height="60" rx="16" fill="#1e4d75"/><path d="M118 331v-22m12 22v-34m12 34v-15" stroke="#67e8f9" stroke-width="7" stroke-linecap="round"/>
+    <text x="100" y="391" fill="white" font-family="Arial, sans-serif" font-size="27" font-weight="700">Usage records</text>
+    <text x="100" y="425" fill="#bfdbfe" font-family="Arial, sans-serif" font-size="18">Monthly credits</text>
+    <text x="100" y="454" fill="#bfdbfe" font-family="Arial, sans-serif" font-size="18">Subscription signals</text>
+    <text x="100" y="483" fill="#bfdbfe" font-family="Arial, sans-serif" font-size="18">Activity evidence</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="505" y="258" width="280" height="262" rx="22" fill="#0e3352" stroke="#2d7491"/>
+    <circle cx="548" cy="321" r="29" fill="#164e63"/><path d="m535 322 9 9 18-21" fill="none" stroke="#5eead4" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="535" y="391" fill="white" font-family="Arial, sans-serif" font-size="27" font-weight="700">Validated snapshot</text>
+    <text x="535" y="425" fill="#ccfbf1" font-family="Arial, sans-serif" font-size="18">Bounded collection</text>
+    <text x="535" y="454" fill="#ccfbf1" font-family="Arial, sans-serif" font-size="18">Durable history</text>
+    <text x="535" y="483" fill="#ccfbf1" font-family="Arial, sans-serif" font-size="18">Safe stale-data fallback</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="938" y="232" width="190" height="315" rx="22" fill="#f8fafc"/>
+    <rect x="958" y="256" width="150" height="30" rx="8" fill="#dbeafe"/><rect x="958" y="306" width="94" height="12" rx="6" fill="#94a3b8"/><rect x="958" y="334" width="150" height="58" rx="11" fill="#eff6ff"/>
+    <rect x="970" y="350" width="33" height="27" rx="6" fill="#14b8a6"/><rect x="1012" y="345" width="82" height="10" rx="5" fill="#2563eb"/><rect x="1012" y="366" width="55" height="8" rx="4" fill="#94a3b8"/>
+    <text x="958" y="431" fill="#0f2742" font-family="Arial, sans-serif" font-size="22" font-weight="700">Dashboard</text>
+    <text x="958" y="462" fill="#33516f" font-family="Arial, sans-serif" font-size="16">Insights · CSV · History</text>
+    <rect x="958" y="485" width="128" height="30" rx="15" fill="#d1fae5"/><text x="976" y="506" fill="#047857" font-family="Arial, sans-serif" font-size="14" font-weight="700">Actionable view</text>
+  </g>
+  <g fill="none" stroke="#7dd3fc" stroke-width="8" stroke-linecap="round"><path d="M360 389H497"/><path d="M793 389H930"/></g>
+  <text x="72" y="607" fill="#9cc8ea" font-family="Arial, sans-serif" font-size="17">Illustration uses fictional, non-identifying information only.</text>
+</svg>

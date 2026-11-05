@@ -25,6 +25,10 @@ Kiro Credit Usage Web helps an administrator inspect current-month Kiro Credits 
 
 The dashboard is bilingual. It selects Simplified Chinese for `navigator.language` values beginning with `zh`; all other browser languages default to English. The globe button in the existing action group switches language for the current page session. The preference is deliberately not stored in cookies, URLs, or browser storage. User names, emails, tier values, and unknown server-provided values remain unchanged.
 
+![Illustration of the project turning bounded usage records into validated dashboard insight](https://raw.githubusercontent.com/ChowRex/kiro-credit-usage-web/v0.2.0/assets/illustrations/purpose-en.svg)
+
+_The illustration uses fictional, non-identifying information only._
+
 ### Project history and deliberate design choices
 
 This repository began as a request for a quick way to review every subscriber's credit usage on demand and avoid wasting Kiro Credits. The following decisions are intentional:
@@ -61,6 +65,8 @@ python -m app.refresh
 ```
 
 The browser has no AWS credentials and makes no direct AWS requests.
+
+![Deployment architecture showing browser, Nginx, Docker Compose, protected runtime, and AWS data plane](https://raw.githubusercontent.com/ChowRex/kiro-credit-usage-web/v0.2.0/assets/illustrations/architecture-en.svg)
 
 ### Requirements
 
@@ -297,6 +303,8 @@ This repository may be public; your deployment data must not be.
 - Do not serve `data/` directly from a static server.
 - Rotate a suspected leaked refresh token, restart the dashboard with a replacement token, and inspect access paths. Do not reuse AWS credentials as the refresh token.
 
+![Privacy boundary showing browser access separated from protected runtime credentials and refresh access](https://raw.githubusercontent.com/ChowRex/kiro-credit-usage-web/v0.2.0/assets/illustrations/security-en.svg)
+
 ### Refresh, retries, and daily scheduling
 
 Run one immediate refresh:
@@ -312,6 +320,8 @@ python3 -m app.refresh --config config.local.toml --retry
 ```
 
 Default retry delays are 60, 300, 900, and 1,800 seconds with ±20% jitter. Lock contention is retried without being recorded as a refresh failure. Other failures update `state.json`, retain the last successful snapshot, and leave retry metadata for health reporting.
+
+![Daily refresh lifecycle from scheduler through validation and atomic snapshot publication](https://raw.githubusercontent.com/ChowRex/kiro-credit-usage-web/v0.2.0/assets/illustrations/refresh-flow-en.svg)
 
 #### macOS launchd
 
@@ -395,7 +405,7 @@ python3 -m app.refresh --retry
 
 The `docker/` directory contains a portable Linux `docker/Dockerfile`, `docker/compose.yaml`, `docker/container.env.example`, and `docker/kiro-credit-usage.crontab.template`. Root `.dockerignore` remains with the repository-root build context so it excludes private configuration, credentials, snapshots, and development-only files. The image requires Docker BuildKit, which supplies `TARGETARCH`; it fails rather than guessing an architecture when that value is absent. Both the Python base image manifest and AWS CLI v2 archives are pinned by SHA-256. The image verifies the matching archive digest before installing it. Debian package downloads use the configurable Tsinghua TUNA mirror by default for China mainland connectivity; overseas deployments can override both Debian mirror variables with official `deb.debian.org` URLs. Debian repository Release signatures remain verified by APT. See the [AWS CLI v2 Linux installation documentation](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html).
 
-Pushing an exact Git release tag such as `v0.1.1` runs the `Publish Docker image` GitHub Actions workflow. It builds and publishes one Docker Hub manifest for both `linux/amd64` and `linux/arm64` as `chowrex/kiro-credit-usage-web:0.1.1` and `chowrex/kiro-credit-usage-web:latest`. The workflow requires repository secrets named `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN`. It does not publish untagged or branch builds.
+Pushing an exact Git release tag such as `v0.2.0` runs the `Publish Docker image` GitHub Actions workflow. It builds and publishes one Docker Hub manifest for both `linux/amd64` and `linux/arm64` as `chowrex/kiro-credit-usage-web:0.2.0` and `chowrex/kiro-credit-usage-web:latest`. The workflow requires repository secrets named `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN`. It does not publish untagged or branch builds.
 
 Compose keeps two roles separate:
 
@@ -427,7 +437,7 @@ KIRO_DATA_DIR=/srv/kiro-credit-usage/data
 KIRO_AWS_DIR=/srv/kiro-credit-usage/aws-profile
 KIRO_ADMIN_TOKEN_FILE=/srv/kiro-credit-usage/.admin-token
 KIRO_HTTP_PORT=8080
-KIRO_IMAGE_TAG=0.1.1
+KIRO_IMAGE_TAG=0.2.0
 DEBIAN_MIRROR=https://mirrors.tuna.tsinghua.edu.cn/debian
 DEBIAN_SECURITY_MIRROR=https://mirrors.tuna.tsinghua.edu.cn/debian-security
 ```
@@ -452,7 +462,7 @@ For a local source build after review, set `KIRO_IMAGE_TAG=local` and start only
   -f docker/compose.yaml up --build --detach web
 ```
 
-For a server or any host testing the published multi-architecture image, retain a released `KIRO_IMAGE_TAG` such as `0.1.1`, then pull it and start without building:
+For a server or any host testing the published multi-architecture image, retain a released `KIRO_IMAGE_TAG` such as `0.2.0`, then pull it and start without building:
 
 ```bash
 /usr/bin/docker compose \
@@ -516,6 +526,10 @@ Kiro Credit Usage Web 是一个本地优先、面向受控公司网络的 Kiro C
 
 页面支持中英双语。浏览器语言以 `zh` 开头时默认中文，其他语言默认 English。顶部现有操作区中的地球图标仅切换当前页面会话语言，不会将语言偏好写入 Cookie、URL 或浏览器存储。用户名、邮箱、套餐名称和无法识别的服务端原始值不会被翻译或改写。
 
+![展示用量记录变为校验后看板洞察的项目用途图](https://raw.githubusercontent.com/ChowRex/kiro-credit-usage-web/v0.2.0/assets/illustrations/purpose-zh.svg)
+
+_本图仅使用虚构且不可识别的信息。_
+
 ### 项目背景与核心决策
 
 本项目最初源于“快速查看所有订阅用户的 Credits 使用量，避免 Credits 浪费”的需求。以下设计均为刻意选择：
@@ -552,6 +566,8 @@ python -m app.refresh
 ```
 
 浏览器不持有 AWS 凭证，也不会直接请求 AWS。
+
+![展示浏览器、Nginx、Docker Compose、受保护运行目录与 AWS 数据平面的整体部署架构图](https://raw.githubusercontent.com/ChowRex/kiro-credit-usage-web/v0.2.0/assets/illustrations/architecture-zh.svg)
 
 ### 环境要求
 
@@ -788,6 +804,8 @@ POST 接口刻意拒绝请求体和 transfer encoding。响应包含 `X-Content-
 - 不要将 `data/` 直接作为静态目录暴露。
 - 怀疑刷新 Token 泄露时，立即轮换 Token、使用新 Token 重启看板并检查访问路径。不要复用 AWS 凭证作为刷新 Token。
 
+![展示浏览器、私有运行目录与 AWS 刷新权限分离的隐私边界图](https://raw.githubusercontent.com/ChowRex/kiro-credit-usage-web/v0.2.0/assets/illustrations/security-zh.svg)
+
 ### 刷新、重试与每天调度
 
 立即执行一次刷新：
@@ -803,6 +821,8 @@ python3 -m app.refresh --config config.local.toml --retry
 ```
 
 默认重试延迟为 60、300、900、1,800 秒，并带 ±20% 抖动。锁竞争会被重试，且不会记录为刷新失败。其他失败会更新 `state.json`、保留最后成功快照，并为健康接口留下重试元数据。
+
+![从定时调度、刷新、校验到原子化快照发布的每日刷新流程图](https://raw.githubusercontent.com/ChowRex/kiro-credit-usage-web/v0.2.0/assets/illustrations/refresh-flow-zh.svg)
 
 #### macOS launchd
 
@@ -886,7 +906,7 @@ python3 -m app.refresh --retry
 
 `docker/` 目录集中保存可移植 Linux `docker/Dockerfile`、`docker/compose.yaml`、`docker/container.env.example` 和 `docker/kiro-credit-usage.crontab.template`。根目录 `.dockerignore` 与仓库根 build context 保持在一起，用于排除私有配置、凭证、快照和仅开发期文件。镜像需要 Docker BuildKit 提供 `TARGETARCH`，缺失时会明确失败而不猜测架构。Python 基础镜像 manifest 和 AWS CLI v2 安装包均使用 SHA-256 固定，安装前会验证对应归档摘要。Debian 软件包下载默认使用适配中国大陆网络的清华 TUNA 镜像；海外部署可用官方 `deb.debian.org` URL 覆盖两个 Debian 镜像变量。APT 仍会验证 Debian 仓库 Release 签名。参见 [AWS CLI v2 Linux 安装文档](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)。
 
-推送精确 Git 发布 tag，例如 `v0.1.1`，会运行 `Publish Docker image` GitHub Actions 工作流。它会构建并发布同时支持 `linux/amd64` 与 `linux/arm64` 的单个 Docker Hub manifest，标签为 `chowrex/kiro-credit-usage-web:0.1.1` 和 `chowrex/kiro-credit-usage-web:latest`。工作流需要名为 `DOCKERHUB_USERNAME` 和 `DOCKERHUB_TOKEN` 的仓库 Secret，不会发布无 tag 或分支构建。
+推送精确 Git 发布 tag，例如 `v0.2.0`，会运行 `Publish Docker image` GitHub Actions 工作流。它会构建并发布同时支持 `linux/amd64` 与 `linux/arm64` 的单个 Docker Hub manifest，标签为 `chowrex/kiro-credit-usage-web:0.2.0` 和 `chowrex/kiro-credit-usage-web:latest`。工作流需要名为 `DOCKERHUB_USERNAME` 和 `DOCKERHUB_TOKEN` 的仓库 Secret，不会发布无 tag 或分支构建。
 
 Compose 将两个角色分离：
 
@@ -918,7 +938,7 @@ KIRO_DATA_DIR=/srv/kiro-credit-usage/data
 KIRO_AWS_DIR=/srv/kiro-credit-usage/aws-profile
 KIRO_ADMIN_TOKEN_FILE=/srv/kiro-credit-usage/.admin-token
 KIRO_HTTP_PORT=8080
-KIRO_IMAGE_TAG=0.1.1
+KIRO_IMAGE_TAG=0.2.0
 DEBIAN_MIRROR=https://mirrors.tuna.tsinghua.edu.cn/debian
 DEBIAN_SECURITY_MIRROR=https://mirrors.tuna.tsinghua.edu.cn/debian-security
 ```
@@ -943,7 +963,7 @@ DEBIAN_SECURITY_MIRROR=https://mirrors.tuna.tsinghua.edu.cn/debian-security
   -f docker/compose.yaml up --build --detach web
 ```
 
-服务器或其他测试已发布多架构镜像的主机应保留已发布的 `KIRO_IMAGE_TAG`，例如 `0.1.1`，然后拉取镜像并在不构建的情况下启动：
+服务器或其他测试已发布多架构镜像的主机应保留已发布的 `KIRO_IMAGE_TAG`，例如 `0.2.0`，然后拉取镜像并在不构建的情况下启动：
 
 ```bash
 /usr/bin/docker compose \

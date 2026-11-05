@@ -9,7 +9,6 @@ const MESSAGES = {
     switchToEnglish: "切换为 English",
     switchToChinese: "切换为中文",
     checkingRefresh: "正在检查刷新状态…",
-    loadingInterpretation: "正在读取数据口径…",
     dataTime: "数据时间",
     browserTime: "以下时间按浏览器本地时间显示",
     dataCutoff: "数据截止日",
@@ -30,20 +29,20 @@ const MESSAGES = {
     accountStatus: "账户状态",
     accountStatusDescription: "根据数据截止日前的用量证据判断",
     active: "活跃",
-    unknownStatus: "未知状态",
+    inactive: "不活跃",
     usageDistributionKicker: "用户用量分布",
     usageDistribution: "用户用量分布",
-    statusZero: "零使用",
-    statusLow: "低使用",
-    statusMedium: "中使用",
-    statusNormal: "正常",
-    statusHigh: "高负载",
+    statusZero: "零使用量",
+    statusLow: "低使用量",
+    statusMedium: "中使用量",
+    statusNormal: "合理用量",
+    statusHigh: "高用量",
     statusUnknown: "套餐/容量未知",
-    distributionZeroDescription: "本月无 Credits · ",
-    distributionLowDescription: "非零且低于 10% · ",
-    distributionMediumDescription: "10%–<50% · ",
-    distributionNormalDescription: "50%–80% · ",
-    distributionHighDescription: "超过 80% · ",
+    distributionZeroDescription: "= 0% · ",
+    distributionLowDescription: "0% - 10% · ",
+    distributionMediumDescription: "10% - 50% · ",
+    distributionNormalDescription: "50% - 80% · ",
+    distributionHighDescription: "≥ 80% · ",
     userDetails: "用户明细",
     loading: "正在加载…",
     search: "搜索",
@@ -59,7 +58,6 @@ const MESSAGES = {
     lastActive: "最后活跃",
     activeDays: "活跃天数",
     monthlyCost: "月成本",
-    tierSource: "套餐来源",
     noMatchingUsers: "没有符合当前筛选条件的用户。",
     recentSnapshots: "最近快照",
     historyDescription: "永久历史中的最近 5 次有效记录，仅展示摘要。",
@@ -81,14 +79,12 @@ const MESSAGES = {
     noMonthData: "本月暂无可用数据",
     noFreshnessNotice: "暂无数据时效说明",
     sourceLagWarning: "Kiro 源数据通常存在 1–2 天延迟",
-    usageCumulative: "用量累计至数据截止日",
-    usageNoCurrentMonth: "本月暂无可用源数据；零值不能证明实际未使用",
     latestOnlineData: "{month} 自然月 · 最新在线数据",
     unknownCostUsers: "成本未知 {count} 人",
     queryCount: "本次查询 {count} 次",
     distributionAria: "{status} {count} 人，占可评估用户 {percent}%",
     distributionMeta: "可评估 {total} / {users} · 套餐/容量未知 {unknown}",
-    accountUnknown: "未知",
+    accountInactive: "不活跃",
     usageAria: "{name} 使用率 {percent}%",
     resultCount: "显示 {shown} / {total} 个账号",
     noCurrentMonthData: "无当月数据",
@@ -110,10 +106,6 @@ const MESSAGES = {
     errorInvalidRefreshToken: "管理员 Token 无效",
     errorRefreshAlreadyRunning: "同步已在进行中",
     errorRefreshCooldown: "请稍后再试",
-    sourceAuthoritative: "权威订阅 CSV",
-    sourceIicGroup: "当前 IIC 套餐组",
-    sourceLatest: "截止日用量记录",
-    sourceDirectAssignment: "IIC 直接分配（套餐未知）",
   },
   "en-US": {
     pageTitle: "Kiro Credits Usage Dashboard",
@@ -125,7 +117,6 @@ const MESSAGES = {
     switchToEnglish: "Switch to English",
     switchToChinese: "切换为中文",
     checkingRefresh: "Checking refresh status…",
-    loadingInterpretation: "Loading data interpretation…",
     dataTime: "Data times",
     browserTime: "Times are shown in your browser's local time.",
     dataCutoff: "Data cutoff",
@@ -146,20 +137,20 @@ const MESSAGES = {
     accountStatus: "Account status",
     accountStatusDescription: "Inferred from usage evidence through the data cutoff",
     active: "Active",
-    unknownStatus: "Unknown status",
+    inactive: "Inactive",
     usageDistributionKicker: "USAGE DISTRIBUTION",
     usageDistribution: "Usage distribution",
     statusZero: "No usage",
     statusLow: "Low usage",
     statusMedium: "Medium usage",
-    statusNormal: "Normal",
+    statusNormal: "Reasonable usage",
     statusHigh: "High usage",
     statusUnknown: "Unknown tier/capacity",
-    distributionZeroDescription: "No Credits this month · ",
-    distributionLowDescription: "Nonzero and under 10% · ",
-    distributionMediumDescription: "10%–<50% · ",
-    distributionNormalDescription: "50%–80% · ",
-    distributionHighDescription: "Over 80% · ",
+    distributionZeroDescription: "= 0% · ",
+    distributionLowDescription: "0% - 10% · ",
+    distributionMediumDescription: "10% - 50% · ",
+    distributionNormalDescription: "50% - 80% · ",
+    distributionHighDescription: "≥ 80% · ",
     userDetails: "User details",
     loading: "Loading…",
     search: "Search",
@@ -175,7 +166,6 @@ const MESSAGES = {
     lastActive: "Last active",
     activeDays: "Active days",
     monthlyCost: "Monthly cost",
-    tierSource: "Tier source",
     noMatchingUsers: "No users match the current filters.",
     recentSnapshots: "Recent snapshots",
     historyDescription: "The five latest valid persistent-history records, shown as summaries.",
@@ -198,15 +188,12 @@ const MESSAGES = {
     noMonthData: "No current-month data is available",
     noFreshnessNotice: "No data freshness details are available",
     sourceLagWarning: "Kiro source data is typically delayed by 1–2 days",
-    usageCumulative: "Usage is cumulative through the data cutoff",
-    usageNoCurrentMonth:
-      "No current-month source data is available; zero values do not confirm non-use",
     latestOnlineData: "{month} calendar month · latest online data",
     unknownCostUsers: "Cost unknown for {count} users",
     queryCount: "{count} queries in this run",
     distributionAria: "{status}: {count} users, {percent}% of evaluable users",
     distributionMeta: "Evaluable {total} / {users} · unknown tier/capacity {unknown}",
-    accountUnknown: "Unknown",
+    accountInactive: "Inactive",
     usageAria: "{name} usage: {percent}%",
     resultCount: "Showing {shown} / {total} accounts",
     noCurrentMonthData: "No current-month data",
@@ -228,10 +215,6 @@ const MESSAGES = {
     errorInvalidRefreshToken: "The administrator token is invalid",
     errorRefreshAlreadyRunning: "A sync is already in progress",
     errorRefreshCooldown: "Please try again later",
-    sourceAuthoritative: "Authoritative subscription CSV",
-    sourceIicGroup: "Current IIC tier group",
-    sourceLatest: "Usage record at the data cutoff",
-    sourceDirectAssignment: "Direct IIC assignment (tier unknown)",
   },
 };
 const STATUS = {
@@ -243,12 +226,6 @@ const STATUS = {
   unknown: { labelKey: "statusUnknown", order: 5 },
 };
 const DISTRIBUTION_STATUSES = ["zero", "low", "medium", "normal", "high"];
-const SOURCE = {
-  current_authoritative_snapshot: "sourceAuthoritative",
-  current_iic_group: "sourceIicGroup",
-  latest_at_data_cutoff: "sourceLatest",
-  unknown_direct_assignment: "sourceDirectAssignment",
-};
 const ERROR_KEYS = {
   manual_refresh_disabled: "errorManualRefreshDisabled",
   invalid_refresh_token: "errorInvalidRefreshToken",
@@ -283,6 +260,8 @@ const formatCredit = (value) =>
     : new Intl.NumberFormat(state.locale, { maximumFractionDigits: 0 }).format(
         Math.round(Number(value)),
       );
+const formatCapacity = (value) =>
+  value == null ? t("notAvailable") : String(Math.round(Number(value)));
 const formatPercent = (value) =>
   value == null ? null : Math.min(100, Math.max(0, Math.ceil(Number(value))));
 const formatTimestamp = (value) => {
@@ -310,10 +289,6 @@ function statusLabel(status) {
   return STATUS[status] ? t(STATUS[status].labelKey) : status;
 }
 
-function sourceLabel(source) {
-  return SOURCE[source] ? t(SOURCE[source]) : source;
-}
-
 function errorMessage(error) {
   const key = ERROR_KEYS[error?.payload?.error];
   return key ? t(key) : error?.message || "";
@@ -323,11 +298,6 @@ function localizeServerText(value, fallbackKey) {
   const normalized = String(value || "");
   const keys = {
     "Kiro 源数据通常存在 1–2 天延迟": "sourceLagWarning",
-    "Usage is cumulative through data_cutoff": "usageCumulative",
-    用量累计至数据截止日: "usageCumulative",
-    "No current-month source data is available; zero values are not confirmed non-use":
-      "usageNoCurrentMonth",
-    "本月暂无可用源数据；零值不能证明实际未使用": "usageNoCurrentMonth",
   };
   return keys[normalized] ? t(keys[normalized]) : normalized || t(fallbackKey);
 }
@@ -436,7 +406,9 @@ function renderSummary() {
   text(byId("kpiMedium"), summary.medium);
   text(byId("kpiNormal"), summary.normal);
   text(byId("kpiHigh"), summary.high ?? 0);
-  renderAccountSummary(snapshot.users);
+  const showAccountStatus = !snapshot.no_month_data;
+  byId("accountStatusSection").hidden = !showAccountStatus;
+  if (showAccountStatus) renderAccountSummary(snapshot.users);
   renderDistribution(summary);
   text(byId("kpiCredits"), formatCredit(summary.total_credits));
   text(byId("kpiCost"), `$${formatNumber(summary.known_monthly_cost_usd)}`);
@@ -444,9 +416,6 @@ function renderSummary() {
   text(byId("kpiScan"), formatBytes(snapshot.collection?.data_scanned_bytes));
   text(byId("kpiQueries"), t("queryCount", { count: snapshot.collection?.query_count ?? "—" }));
 
-  const notice = byId("dataNotice");
-  notice.className = snapshot.no_month_data ? "data-notice warning" : "data-notice";
-  text(notice, localizeServerText(snapshot.usage_interpretation, "loadingInterpretation"));
   text(byId("footerMeta"), `${t("dataCutoff")} ${cutoff} · ${lagWarning}`);
   populateTiers(snapshot.users);
 }
@@ -457,7 +426,7 @@ function inferredAccountStatus(user) {
     Number(user.active_days) > 0 ||
     Boolean(user.first_active) ||
     Boolean(user.last_active);
-  return hasUsageEvidence ? "active" : "unknown";
+  return hasUsageEvidence ? "active" : "inactive";
 }
 
 function renderAccountSummary(users) {
@@ -553,19 +522,23 @@ function renderTable() {
   const users = filteredUsers();
   const body = byId("userRows");
   body.replaceChildren();
+  const showAccountStatus = !state.snapshot.no_month_data;
+  byId("accountStatusColumn").hidden = !showAccountStatus;
   users.forEach((user) => {
     const row = document.createElement("tr");
     row.append(cell(user.user_name, "user"));
     row.append(cell(user.email || "—", "email"));
-    const accountCell = document.createElement("td");
-    const accountBadge = document.createElement("span");
-    const accountStatus = inferredAccountStatus(user);
-    accountBadge.className = `badge account-${accountStatus}`;
-    text(accountBadge, accountStatus === "active" ? t("active") : t("accountUnknown"));
-    accountCell.append(accountBadge);
-    row.append(accountCell);
+    if (showAccountStatus) {
+      const accountCell = document.createElement("td");
+      const accountBadge = document.createElement("span");
+      const accountStatus = inferredAccountStatus(user);
+      accountBadge.className = `badge account-${accountStatus}`;
+      text(accountBadge, accountStatus === "active" ? t("active") : t("accountInactive"));
+      accountCell.append(accountBadge);
+      row.append(accountCell);
+    }
     row.append(cell(user.tier));
-    const capacity = user.capacity > 0 ? formatCredit(user.capacity) : t("notAvailable");
+    const capacity = user.capacity > 0 ? formatCapacity(user.capacity) : t("notAvailable");
     row.append(cell(`${formatCredit(user.credits)} / ${capacity}`));
 
     const usageCell = document.createElement("td");
@@ -605,7 +578,6 @@ function renderTable() {
           : `$${formatNumber(user.monthly_cost_usd)}`,
       ),
     );
-    row.append(cell(sourceLabel(user.tier_source)));
     body.append(row);
   });
   text(

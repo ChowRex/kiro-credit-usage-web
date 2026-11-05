@@ -51,15 +51,6 @@
       >
         正在检查刷新状态…
       </section>
-      <section
-        id="dataNotice"
-        class="data-notice"
-        aria-live="polite"
-        data-i18n="loadingInterpretation"
-      >
-        正在读取数据口径…
-      </section>
-
       <section class="time-panel" aria-labelledby="timeTitle">
         <header class="time-panel-head">
           <h2 id="timeTitle" data-i18n="dataTime">数据时间</h2>
@@ -110,7 +101,12 @@
         </div>
       </section>
 
-      <section class="dashboard-section" aria-labelledby="subscriptionTitle">
+      <section
+        id="accountStatusSection"
+        class="dashboard-section"
+        aria-labelledby="subscriptionTitle"
+        hidden
+      >
         <div class="section-heading">
           <div>
             <p data-i18n="accountStatusKicker">账户状态</p>
@@ -126,10 +122,9 @@
             </div>
           </article>
           <article>
-            <span class="status-marker unknown"></span>
+            <span class="status-marker inactive"></span>
             <div>
-              <small data-i18n="unknownStatus">未知状态</small
-              ><strong id="subscriptionUnknown">—</strong>
+              <small data-i18n="inactive">不活跃</small><strong id="subscriptionUnknown">—</strong>
             </div>
           </article>
         </div>
@@ -146,7 +141,7 @@
         <div class="distribution-panel">
           <div class="distribution-stats">
             <article class="status-stat zero">
-              <span data-i18n="statusZero">零使用</span><strong id="kpiZero">—</strong
+              <span data-i18n="statusZero">零使用量</span><strong id="kpiZero">—</strong
               ><progress
                 id="distributionZero"
                 class="distribution-meter zero"
@@ -154,12 +149,12 @@
                 value="0"
               ></progress
               ><small
-                ><span data-i18n="distributionZeroDescription">本月无 Credits · </span
+                ><span data-i18n="distributionZeroDescription">= 0% · </span
                 ><b id="distributionZeroPercent">—</b></small
               >
             </article>
             <article class="status-stat low">
-              <span data-i18n="statusLow">低使用</span><strong id="kpiLow">—</strong
+              <span data-i18n="statusLow">低使用量</span><strong id="kpiLow">—</strong
               ><progress
                 id="distributionLow"
                 class="distribution-meter low"
@@ -167,12 +162,12 @@
                 value="0"
               ></progress
               ><small
-                ><span data-i18n="distributionLowDescription">非零且低于 10% · </span
+                ><span data-i18n="distributionLowDescription">0% - 10% · </span
                 ><b id="distributionLowPercent">—</b></small
               >
             </article>
             <article class="status-stat medium">
-              <span data-i18n="statusMedium">中使用</span><strong id="kpiMedium">—</strong
+              <span data-i18n="statusMedium">中使用量</span><strong id="kpiMedium">—</strong
               ><progress
                 id="distributionMedium"
                 class="distribution-meter medium"
@@ -180,12 +175,12 @@
                 value="0"
               ></progress
               ><small
-                ><span data-i18n="distributionMediumDescription">10%–&lt;50% · </span
+                ><span data-i18n="distributionMediumDescription">10% - 50% · </span
                 ><b id="distributionMediumPercent">—</b></small
               >
             </article>
             <article class="status-stat normal">
-              <span data-i18n="statusNormal">正常</span><strong id="kpiNormal">—</strong
+              <span data-i18n="statusNormal">合理用量</span><strong id="kpiNormal">—</strong
               ><progress
                 id="distributionNormal"
                 class="distribution-meter normal"
@@ -193,12 +188,12 @@
                 value="0"
               ></progress
               ><small
-                ><span data-i18n="distributionNormalDescription">50%–80% · </span
+                ><span data-i18n="distributionNormalDescription">50% - 80% · </span
                 ><b id="distributionNormalPercent">—</b></small
               >
             </article>
             <article class="status-stat high">
-              <span data-i18n="statusHigh">高负载</span><strong id="kpiHigh">—</strong
+              <span data-i18n="statusHigh">高用量</span><strong id="kpiHigh">—</strong
               ><progress
                 id="distributionHigh"
                 class="distribution-meter high"
@@ -206,7 +201,7 @@
                 value="0"
               ></progress
               ><small
-                ><span data-i18n="distributionHighDescription">超过 80% · </span
+                ><span data-i18n="distributionHighDescription">≥ 80% · </span
                 ><b id="distributionHighPercent">—</b></small
               >
             </article>
@@ -243,11 +238,11 @@
               <span data-i18n="status">状态</span>
               <select id="statusFilter">
                 <option value="" data-i18n="allStatuses">全部状态</option>
-                <option value="zero" data-i18n="statusZero">零使用</option>
-                <option value="low" data-i18n="statusLow">低使用</option>
-                <option value="medium" data-i18n="statusMedium">中使用</option>
-                <option value="normal" data-i18n="statusNormal">正常</option>
-                <option value="high" data-i18n="statusHigh">高负载</option>
+                <option value="zero" data-i18n="statusZero">零使用量</option>
+                <option value="low" data-i18n="statusLow">低使用量</option>
+                <option value="medium" data-i18n="statusMedium">中使用量</option>
+                <option value="normal" data-i18n="statusNormal">合理用量</option>
+                <option value="high" data-i18n="statusHigh">高用量</option>
                 <option value="unknown" data-i18n="statusUnknown">套餐/容量未知</option>
               </select>
             </label>
@@ -269,7 +264,9 @@
                 <th scope="col">
                   <button type="button" data-sort="email" data-i18n="email">邮箱</button>
                 </th>
-                <th scope="col" data-i18n="accountStatus">账户状态</th>
+                <th id="accountStatusColumn" scope="col" data-i18n="accountStatus" hidden>
+                  账户状态
+                </th>
                 <th scope="col">
                   <button type="button" data-sort="tier" data-i18n="tier">套餐</button>
                 </th>
@@ -301,7 +298,6 @@
                     月成本
                   </button>
                 </th>
-                <th scope="col" data-i18n="tierSource">套餐来源</th>
               </tr>
             </thead>
             <tbody id="userRows"></tbody>

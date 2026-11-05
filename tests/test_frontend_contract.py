@@ -27,7 +27,6 @@ class FrontendContractTests(unittest.TestCase):
             "kpiZero",
             "kpiLow",
             "kpiHigh",
-            "dataNotice",
             "timeCutoff",
             "timeGenerated",
             "timeLastSuccess",
@@ -36,6 +35,8 @@ class FrontendContractTests(unittest.TestCase):
             "historyEmpty",
             "subscriptionActive",
             "subscriptionUnknown",
+            "accountStatusSection",
+            "accountStatusColumn",
             "distributionMeta",
             "distributionZero",
             "distributionLow",
@@ -54,7 +55,7 @@ class FrontendContractTests(unittest.TestCase):
         self.assertIn("/api/history", script)
         self.assertIn("/api/reload", script)
         self.assertIn("/api/refresh", script)
-        self.assertIn("usage_interpretation", script)
+        self.assertNotIn("usage_interpretation", script)
         self.assertIn("manual_refresh_enabled", script)
         self.assertIn("manual_refresh_running", script)
         self.assertIn("X-Refresh-Token", script)
@@ -73,8 +74,16 @@ class FrontendContractTests(unittest.TestCase):
         self.assertIn('class="distribution-panel"', html)
         self.assertIn("meter.max = maximum", script)
         self.assertIn("meter.value = count", script)
-        self.assertIn("inferredAccountStatus", script)
-        self.assertIn('unknownStatus: "未知状态"', script)
+        self.assertIn("!snapshot.no_month_data", script)
+        self.assertIn('id="accountStatusSection"', html)
+        self.assertIn('id="accountStatusColumn"', html)
+        self.assertIn('inactive: "不活跃"', script)
+        self.assertIn("--zero: #8c1f28", styles)
+        self.assertIn("--low: #f0653a", styles)
+        self.assertIn("--medium: #f5c242", styles)
+        self.assertIn("--normal: #82c36b", styles)
+        self.assertIn("--high: #1e7a4e", styles)
+        self.assertNotIn('data-i18n="tierSource"', html)
         self.assertNotIn('id="subscriptionPending"', html)
         self.assertIn("updateSortIndicators", script)
         self.assertIn('setAttribute("aria-label"', script)

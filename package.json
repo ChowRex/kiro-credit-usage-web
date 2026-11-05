@@ -1,6 +1,6 @@
 {
   "name": "kiro-credit-usage-web",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "Development-only frontend quality tooling for Kiro Credit Usage Web.",
   "packageManager": "npm@11.20.0",

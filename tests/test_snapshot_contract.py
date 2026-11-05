@@ -2,6 +2,7 @@
 
 import json
 import unittest
+from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
@@ -14,6 +15,7 @@ from app.snapshot_contract import (
     TIERS,
     TOP_LEVEL_FIELDS,
     USER_FIELDS,
+    status_for,
 )
 from app.storage import validate_snapshot
 from tests.snapshot_factory import valid_snapshot
@@ -56,3 +58,19 @@ class SnapshotContractTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class UsageStatusBoundaryTests(unittest.TestCase):
+    """Verify the agreed non-overlapping usage percentage intervals."""
+
+    def test_usage_intervals_treat_eighty_percent_as_high(self) -> None:
+        """Keep zero separate and use left-closed, right-open nonzero intervals."""
+        capacity = 10_000
+        self.assertEqual("zero", status_for(Decimal("0"), capacity))
+        self.assertEqual("low", status_for(Decimal("1"), capacity))
+        self.assertEqual("low", status_for(Decimal("999"), capacity))
+        self.assertEqual("medium", status_for(Decimal("1000"), capacity))
+        self.assertEqual("medium", status_for(Decimal("4999"), capacity))
+        self.assertEqual("normal", status_for(Decimal("5000"), capacity))
+        self.assertEqual("normal", status_for(Decimal("7999"), capacity))
+        self.assertEqual("high", status_for(Decimal("8000"), capacity))

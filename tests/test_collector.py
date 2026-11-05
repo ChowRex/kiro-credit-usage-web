@@ -153,7 +153,7 @@ class CollectorTests(unittest.TestCase):
         self.assertEqual("zero", status_for(Decimal(0), 1000))
         self.assertEqual("low", status_for(Decimal("99.99"), 1000))
         self.assertEqual("medium", status_for(Decimal(100), 1000))
-        self.assertEqual("normal", status_for(Decimal(800), 1000))
+        self.assertEqual("high", status_for(Decimal(800), 1000))
         self.assertEqual("high", status_for(Decimal("800.01"), 1000))
         sql = usage_sql("kiro_analytics", "2026-10", datetime(2026, 10, 27).date())
         self.assertLess(sql.index("LIKE '%PRO+%'"), sql.rindex("LIKE '%PRO%'"))

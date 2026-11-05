@@ -88,6 +88,6 @@ def status_for(usage_credits: Decimal, capacity: int) -> str:
         return "low"
     if rate < Decimal("0.50"):
         return "medium"
-    if rate <= Decimal("0.80"):
+    if rate < Decimal("0.80"):
         return "normal"
     return "high"
